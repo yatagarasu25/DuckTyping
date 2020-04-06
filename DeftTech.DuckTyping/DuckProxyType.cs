@@ -58,7 +58,7 @@ namespace DeftTech.DuckTyping
             if (m_ProxyType == null)
             {
                 AppDomain domain = Thread.GetDomain();
-                AssemblyBuilder assembly = domain.DefineDynamicAssembly(new AssemblyName("DuckProxy_" + typeof(TInterface).FullName.Replace(".", "_") + "_" + m_DuckType.FullName.Replace(".", "_")), AssemblyBuilderAccess.Run);
+                AssemblyBuilder assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("DuckProxy_" + typeof(TInterface).FullName.Replace(".", "_") + "_" + m_DuckType.FullName.Replace(".", "_")), AssemblyBuilderAccess.Run);
                 ModuleBuilder module = assembly.DefineDynamicModule("DuckProxy");
 
                 TypeBuilder proxyType = module.DefineType("DuckProxy");
@@ -106,7 +106,7 @@ namespace DeftTech.DuckTyping
                     ImplementMember(proxyType, proxyMembers, duckField, member);
                 }
 
-                m_ProxyType = proxyType.CreateType();
+                m_ProxyType = proxyType.CreateTypeInfo();
                 m_WrapDuck = (WrapDuckDelegate)(Delegate.CreateDelegate(typeof(WrapDuckDelegate), m_ProxyType, wrapMethod.Name));
             }
         }

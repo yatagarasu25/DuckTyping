@@ -135,7 +135,7 @@ namespace DeftTech.DuckTyping
 
                 AppDomain domain = Thread.GetDomain();
                 string assemblyName = "DuckDelegateProxy_" + m_ToDelegateType.Name.Replace(".", "_").Replace("+", "-") + "_" + m_FromDelegateType.Name.Replace(".", "_").Replace("+", "-") + ".dll";
-                AssemblyBuilder assembly = domain.DefineDynamicAssembly(new AssemblyName(assemblyName), assemblyBuilderAccess);
+                AssemblyBuilder assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(assemblyName), assemblyBuilderAccess);
                 ModuleBuilder module = assembly.DefineDynamicModule(assemblyName);
 
                 TypeBuilder proxyType = module.DefineType("DuckDelegateProxy");
@@ -172,7 +172,7 @@ namespace DeftTech.DuckTyping
                 unwrapMethodIL.Emit(OpCodes.Ret);
 
                 // Bake it
-                m_ProxyType = proxyType.CreateType();
+                m_ProxyType = proxyType.CreateTypeInfo();
                 m_WrapDuck = (WrapDuckDelegate)(Delegate.CreateDelegate(typeof(WrapDuckDelegate), m_ProxyType, wrapMethod.Name));
                 m_InvokeMethod = m_ProxyType.GetMethod("Invoke");
 

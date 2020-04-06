@@ -131,12 +131,12 @@ namespace DeftTech.DuckTyping
 #if !DEBUG
                 assemblyBuilderAccess = AssemblyBuilderAccess.Run;
 #else
-                assemblyBuilderAccess = AssemblyBuilderAccess.RunAndSave;
+                assemblyBuilderAccess = AssemblyBuilderAccess.Run;
 #endif
 
                 AppDomain domain = Thread.GetDomain();
                 string assemblyName = "DuckInterfaceProxy_" + m_InterfaceType.Name.Replace(".", "_").Replace("+", "-") + "_" + m_DuckType.Name.Replace(".", "_").Replace("+", "-") + ".dll";
-                AssemblyBuilder assembly = domain.DefineDynamicAssembly(new AssemblyName(assemblyName), assemblyBuilderAccess);
+                AssemblyBuilder assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(assemblyName), assemblyBuilderAccess);
                 ModuleBuilder module = assembly.DefineDynamicModule(assemblyName);
 
                 TypeBuilder proxyType = module.DefineType("DuckProxy");
@@ -243,7 +243,7 @@ namespace DeftTech.DuckTyping
                 constructorIL.Emit(OpCodes.Ret);
 
                 // Bake it
-                m_ProxyType = proxyType.CreateType();
+                m_ProxyType = proxyType.CreateTypeInfo();
 
                 if (!m_IsDuckStatic)
                 {
